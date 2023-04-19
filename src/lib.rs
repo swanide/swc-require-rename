@@ -1,6 +1,6 @@
 #![allow(clippy::not_unsafe_ptr_arg_deref)]
 use std::{collections::HashMap};
-use swc_core::ecma::ast::{Lit, ModuleItem, ModuleDecl, BlockStmt};
+use swc_core::ecma::ast::{Lit, ModuleItem, ModuleDecl};
 use swc_core::ecma::visit::VisitMutWith;
 use swc_core::ecma::{
     ast::{Program, CallExpr, Callee, Expr, Module, Str},

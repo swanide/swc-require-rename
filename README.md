@@ -1,6 +1,10 @@
 @swanide/swc-require-rename
 ====
 
+swc plugin to add module prefix.
+
+__@swc/core: ">=1.3.42"__
+
 # config
 
 ```javascript
