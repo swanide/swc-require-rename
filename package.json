@@ -1,0 +1,17 @@
+{
+    "name": "@swanide/swc-require-rename",
+    "version": "0.0.4",
+    "description": "rename require function",
+    "author": "kekee000",
+    "license": "MIT",
+    "keywords": ["swc-plugin"],
+    "main": "require_rename.wasm",
+    "scripts": {
+        "prepublishOnly": "cargo build --target wasm32-wasi --release && cp -rf target/wasm32-wasi/release/require_rename.wasm .",
+        "build": "cargo build --target wasm32-wasi --release"
+    },
+    "files": [
+        "require_rename.wasm"
+    ],
+    "preferUnplugged": true
+}
