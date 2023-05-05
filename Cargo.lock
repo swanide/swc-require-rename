@@ -1051,7 +1051,7 @@ dependencies = [
 
 [[package]]
 name = "require_rename"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "serde_json",
  "swc_atoms",

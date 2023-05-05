@@ -28,12 +28,20 @@ impl VisitMut for TransformVisitor {
                     if let Some(expr0) = call_expr.args.get_mut(0) {
                         if let Expr::Lit(Lit::Str(module_name)) = &mut *expr0.expr {
                             let raw_name = module_name.value.to_string();
-                            let mut new_name = String::from(&self.config.module_prefix);
-                            new_name.push_str(&raw_name);
-                            *module_name = Str::from(new_name.as_ref());
+                            if !raw_name.starts_with(&self.config.module_prefix) {
+                                let mut new_name = String::from(&self.config.module_prefix);
+                                new_name.push_str(&raw_name);
+                                *module_name = Str::from(new_name.as_ref());
+                            }
                         }
                     }
                 }
+                else {
+                    call_expr.args.visit_mut_children_with(self);
+                }
+            }
+            else {
+                call_expr.callee.visit_mut_children_with(self);
             }
         }
     }
@@ -108,12 +116,20 @@ import { resolve } from 'path';
 import fs from 'fs';
 const a = 1 || require('a');
 require('bcd');
+a(require("_name").start());
+// not transform
+t.require('no');
+require('@swan-module/m');
 "#,
     // Output codes after transformed with plugin
     r#"import { resolve } from "@swan-module/path";
 import fs from "@swan-module/fs";
 const a = 1 || require("@swan-module/a");
 require("@swan-module/bcd");
+a(require("@swan-module/_name").start());
+// not transform
+t.require('no');
+require('@swan-module/m');
 "#
 );
 
