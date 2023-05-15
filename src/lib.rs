@@ -35,15 +35,12 @@ impl VisitMut for TransformVisitor {
                             }
                         }
                     }
+                    return;
                 }
-                else {
-                    call_expr.args.visit_mut_children_with(self);
-                }
-            }
-            else {
-                call_expr.callee.visit_mut_children_with(self);
             }
         }
+        call_expr.callee.visit_mut_children_with(self);
+        call_expr.args.visit_mut_children_with(self);
     }
 
 
@@ -120,6 +117,7 @@ a(require("_name").start());
 // not transform
 t.require('no');
 require('@swan-module/m');
+var t = require("./typeof.js").default;
 "#,
     // Output codes after transformed with plugin
     r#"import { resolve } from "@swan-module/path";
@@ -130,6 +128,46 @@ a(require("@swan-module/_name").start());
 // not transform
 t.require('no');
 require('@swan-module/m');
+var t = require("@swan-module/./typeof.js").default;
+"#
+);
+
+test!(
+    Default::default(),
+    |_| {
+        let config = Config{module_prefix: "@swan-module/".to_string()};
+        as_folder(TransformVisitor{
+            config
+        })
+    },
+    test_trans_require,
+    // Input codes
+    r#"(swan.webpackJsonp=swan.webpackJsonp||[]).push({141:function(x,e){
+
+const a = 1 || require('a');
+require('bcd');
+a(require("_name").start());
+// not transform
+t.require('no');
+require('@swan-module/m');
+
+var t = require("./typeof.js").default;
+return t;
+}});
+"#,
+    // Output codes after transformed with plugin
+    r#"(swan.webpackJsonp=swan.webpackJsonp||[]).push({141:function(x,e){
+
+const a = 1 || require("@swan-module/a");
+require("@swan-module/bcd");
+a(require("@swan-module/_name").start());
+// not transform
+t.require('no');
+require('@swan-module/m');
+
+var t = require("@swan-module/./typeof.js").default;
+return t;
+}});
 "#
 );
 

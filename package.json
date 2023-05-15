@@ -1,6 +1,6 @@
 {
     "name": "@baidu/swc-require-rename",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "rename require function",
     "author": "kekee000",
     "license": "MIT",
